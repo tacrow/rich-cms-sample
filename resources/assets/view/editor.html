@@ -9,12 +9,84 @@
 	<meta name="description" content="cms">
 	<link media="all" type="text/css" rel="stylesheet" href="../../../public/assets/css/all.css">
 </head>
-<body id="page-editor">
-	<h1>Rich-CMS Sample Editor</h1>
-	<div>
-		
+<body id="page-editor" ng-app="App">
+	<div ng-controller="MainController">
+		<h1>Rich-CMS Sample Editor - AngularJS ver1.4.0</h1>
+
+		<form ng-controller="RegisterController" 
+			  ng-submit="addTodo()">
+			<input type="text"
+				   required
+				   placeholder="新しい要件を入力"
+				   ng-model="newTitle">
+			<button type="submit">追加</button>
+		</form>
+
+		<hr>
+
+		<div ng-controller="ToolbarController">
+			<button ng-click="checkAll()">
+				全て完了/未了
+			</button>
+			
+			<button ng-class="{active: !currentFilter}"
+					ng-click="changeFilter()" class="active">
+				全部&nbsp;
+				<span class="badge">{{ allCount }}</span>
+			</button>
+			<button ng-class="{active: currentFilter == filter.remaining}" 
+					ng-click="changeFilter(filter.remaining)">
+				未了&nbsp;
+				<span class="badge">{{ remainingCount }}</span>
+			</button>
+			<button ng-class="{active: currentFilter == filter.done}" 
+					ng-click="changeFilter(filter.done)">
+				完了&nbsp;
+				<span class="badge">{{ doneCount }}</span>
+			</button>
+
+			<button ng-click="removeDoneTodo()">
+				完了アイテムを全て削除
+			</button>
+		</div>
+
+		<hr>
+
+		<ul ng-controller="TodoListController">
+			<li ng-repeat="todo in todoList | filter:currentFilter" 
+				ng-class="{done: todo.done, editing: todo == editing}">
+				<form name="todoForm" 
+					  ng-submit="doneEdit(todoForm)">
+					<label>
+						<input type="checkbox"
+							   ng-model="todo.done">
+					</label>
+					<span ng-dblclick="editTodo(todo)" 
+						  ng-hide="todo == editing">
+						  {{ todo.title }}
+					</span>
+					<input type="text" 
+						   required 
+						   ng-model="todo.title" 
+						   ng-show="todo == editing" 
+						   my-select="todo == editing" 
+						   ng-blur="doneEdit(todoForm)">
+					<span ng-if="todo != editing">
+						<button type="reset"
+								ng-click="removeTodo(todo)">
+							削除
+						</button>
+					</span>
+				</form>
+			</li>
+		</ul>
 	</div>
+
+	<!-- jQuery3.0 -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-	<script type="text/javascript" src="../../../public/assets/js/bundle/bundle.js"></script>
+	<!-- AngularJS 1.4.0 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+	<!-- app.js -->
+	<script src="../../../public/assets/js/app2.js"></script>
 </body>
 </html>
