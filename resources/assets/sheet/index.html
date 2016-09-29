@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="robots" content="noindex">
+	<title>Rich-CMS Sample | ledger sheet</title>
+	<meta name="keywords" content="cms">
+	<meta name="description" content="cms">
+	<!-- <link media="all" type="text/css" rel="stylesheet" href="../../../public/assets/css/all.css"> -->
+</head>
+<body ng-app="App">
+	<div class="location-bar"></div>
+
+	<header class="">
+		<nav>
+			<div>
+				<a href="#/" class="navbar-brand">帳票アプリ</a>
+			</div>
+			<ul class="nav">
+				<li><a href="#/">帳票一覧</a></li>
+				<li><a href="#/new">帳票作成</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<div ng-view></div>
+
+	<!-- Template.1 - 一覧 -->
+	<script type="text/ng-template" id="index-tmpl">
+		<h1>帳票一覧</h1>
+		<ul ng-show="list">
+			<li ng-repeat="sheet in list">
+				#{{ sheet.id }}
+				{{ sheet.createdAt | date:'yyyy/MM/dd HH:mm' }}
+				<a ng-href="#/sheet/{{ sheet.id }}">詳細を確認する</a>
+			</li>
+		</ul>
+		<div ng-hide="list">
+			帳票が存在しません。<a href="#/new">新しい帳票を作る</a>
+		</div>
+	</script>
+
+	<!-- Template.2 - 作成用 -->
+	<script type="text/ng-template" id="new-tmpl">
+		<h1>帳票作成</h1>
+		<form ng-submit="save()">
+			<table>
+				<thead>
+					<tr>
+						<th>商品名</th>
+						<th>単価</th>
+						<th>個数</th>
+						<th>小計</th>
+						<th>0</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="orderLine in lines">
+						<td><input type="text" ng-model="orderLine.productiName"></td>
+						<td><input type="number" ng-model="orderLine.unitPrice"></td>
+						<td><input type="number" ng-model="orderLine.count"></td>
+						<td>{{ getSubtotal(orderLine) | number }}</td>
+						<td><button type="button" ng-click="removeLine(orderLine)">削除</button></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="3">合計:</td>
+						<td colspan="2">{{ getTotalAmount(lines) | number }}</td>
+					</tr>
+				</tfoot>
+			</table>
+			<div>
+				<button type="button" ng-click="addLine()">明細行を追加</button>
+				<button type="button" ng-click="initialize()">帳票を初期化</button>
+				<button type="submit">帳票を保存</button>
+			</div>
+		<form>
+	</script>
+
+	<!-- Template.3 - 詳細 -->
+	<script type="text/ng-template" id="sheet-tmpl">
+		<h1>帳票詳細 #x</h1>
+		<p>作成日時: yyyy/mm/dd</p>
+		<table>
+			<thead>
+				<tr>
+					<th>商品名</th>
+					<th>単価</th>
+					<th>個数</th>
+					<th>小計</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>商品名1</td>
+					<td>1,600</td>
+					<td>10</td>
+					<td>16,000</td>
+				</tr>
+				<tr>
+					<td>商品名2</td>
+					<td>2,000</td>
+					<td>12</td>
+					<td>24,000</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="3">合計:</td>
+					<td>40,000</td>
+				</tr>
+			</tfoot>
+		</table>
+	</script>
+
+	<!-- jQuery3.0 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+	<!-- AngularJS 1.4.0 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-route.js"></script>
+	<!-- app.js -->
+	<script src="../../../public/assets/js/app3.js"></script>
+</body>
+</html>
